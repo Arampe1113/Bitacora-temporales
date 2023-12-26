@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import datetime
 from datetime import datetime, timedelta
+from pandas.tseries.offsets import BusinessDay
 
 def capturar_nombre_del_rol():
   nombre_del_rol = input("Por favor, introduce el nombre del rol: ")
@@ -49,31 +50,38 @@ def capturar_numero_posiciones():
   return numero_posiciones
 
 def capturar_fecha_actual():
-  fecha_actual = datetime.today()
+  fecha_actual = datetime.now()
+
   return fecha_actual
 
-def calcular_dias_transcurridos(fecha_de_creacion, fecha_actual):
+
+def calcular_dias_transcurridos(fecha_de_creacion: str, fecha_actual: str):
   """
-  Calcula la cantidad de días transcurridos entre dos fechas.
+  Calcula la cantidad de días hábiles entre dos fechas.
 
   Args:
     fecha_de_creacion: La fecha de creación del rol (formato YYYY-MM-DD).
-    fecha_actual: La fecha actual (obtenida con datetime.today()).
+    fecha_actual: La fecha actual (formato YYYY-MM-DD).
 
   Returns:
-    La cantidad de días transcurridos entre las dos fechas.
+    La cantidad de días hábiles entre las dos fechas.
   """
 
-  # Convertir las fechas a objetos datetime
-  # fecha_de_creacion = datetime.strptime(fecha_de_creacion, "%Y-%m-%d")
+  # Crear un DataFrame de Pandas con las fechas
+  fechas = pd.DataFrame({"fecha": pd.bdate_range(fecha_de_creacion, fecha_actual)})
 
-  # Restar las dos fechas
-  diferencia = fecha_actual - fecha_de_creacion
+  # Calcular los días hábiles
+  dias_habiles = fechas.shape[0]
 
-  # Obtener la cantidad de días
-  dias_transcurridos = diferencia.days
+  return dias_habiles
 
-  return dias_transcurridos
+
+
+
+# Ejemplo de uso
+
+
+# Imprimir la información capturada
 
 # Ejemplo de uso
 nombre_del_rol = capturar_nombre_del_rol()
@@ -88,6 +96,7 @@ vinculacion = capturar_vinculacion()
 numero_posiciones = capturar_numero_posiciones()
 fecha_actual = capturar_fecha_actual()
 dias_transcurridos = calcular_dias_transcurridos(fecha_de_creacion, fecha_actual)
+
 
 # Imprimir la información capturada
 print(f"Nombre del rol: {nombre_del_rol}")
